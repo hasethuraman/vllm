@@ -236,7 +236,7 @@ class Worker(WorkerBase):
             )
             if self.init_snapshot.free_memory < self.requested_memory:
                 GiB = lambda b: round(b / GiB_bytes, 2)
-                raise ValueError(
+                logger.info(
                     f"Free memory on device "
                     f"({GiB(self.init_snapshot.free_memory)}/"
                     f"{GiB(self.init_snapshot.total_memory)} GiB) on startup "

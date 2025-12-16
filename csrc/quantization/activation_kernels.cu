@@ -212,7 +212,7 @@ __device__ __forceinline__ __nv_bfloat162 clip(__nv_bfloat162 v,
 //  __nv_fp8_e4m3uz = (-240.0, +240.0)
 // It is currently assumed that only
 template <class T>
-constexpr __nv_bfloat16 get_fp8_max() {
+__device__ __forceinline__ __nv_bfloat16 get_fp8_max() {
   static_assert(std::is_same_v<T, c10::Float8_e4m3fn> ||
                 std::is_same_v<T, c10::Float8_e4m3fnuz>);
   if constexpr (std::is_same_v<T, c10::Float8_e4m3fn>) {
@@ -223,7 +223,7 @@ constexpr __nv_bfloat16 get_fp8_max() {
 }
 
 template <class T>
-constexpr __nv_bfloat16 get_fp8_min() {
+__device__ __forceinline__ __nv_bfloat16 get_fp8_min() {
   static_assert(std::is_same_v<T, c10::Float8_e4m3fn> ||
                 std::is_same_v<T, c10::Float8_e4m3fnuz>);
   if constexpr (std::is_same_v<T, c10::Float8_e4m3fn>) {
@@ -304,10 +304,10 @@ __global__ void silu_mul_fp8_quant_deep_gemm_kernel(
   int* s_expert_offsets =
       reinterpret_cast<int*>(smem_128 + (SMEM_SIZE_BYTES_Y / 16));
 
-  static constexpr __nv_bfloat16 fp8_min = get_fp8_min<fp8_type>();
-  static constexpr __nv_bfloat16 fp8_max = get_fp8_max<fp8_type>();
-  // We assign EPS with it's 16-bit unsigned counterpart to allow constexpr.
-  static constexpr __nv_bfloat16 EPS = (__nv_bfloat16_raw{.x = 11996});
+  const __nv_bfloat16 fp8_min = get_fp8_min<fp8_type>();
+  const __nv_bfloat16 fp8_max = get_fp8_max<fp8_type>();
+  // We assign EPS with it's 16-bit unsigned counterpart.
+  const __nv_bfloat16 EPS = __nv_bfloat16(__nv_bfloat16_raw{.x = 11996});
   int tid = threadIdx.x;
   int warp_id = tid >> 5;
   int lane_id = tid & 0x1f;

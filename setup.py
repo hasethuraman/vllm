@@ -786,7 +786,12 @@ setup(
         "bench": ["pandas", "matplotlib", "seaborn", "datasets"],
         "tensorizer": ["tensorizer==2.10.1"],
         "fastsafetensors": ["fastsafetensors >= 0.1.10"],
-        "runai": ["runai-model-streamer[s3,gcs] >= 0.15.0"],
+        "runai": [
+            "runai-model-streamer-hari==0.0.1.dev3",
+            "runai-model-streamer-s3-hari==0.0.1.dev3",
+            "runai-model-streamer-gcs-hari==0.0.1.dev3",
+            "runai-model-streamer-azure-hari==0.0.1.dev3",
+        ],
         "audio": [
             "librosa",
             "soundfile",
